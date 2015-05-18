@@ -258,7 +258,6 @@ DEPENDENCIES
   byebug
   capybara
   codeclimate-test-reporter
-  coffee-rails (~> 4.1.0)
   devise
   dotenv-rails
   dropbox-sdk

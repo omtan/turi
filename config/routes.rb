@@ -37,8 +37,12 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => { registrations: 'registrations' }
   resources :users, only: [:show, :edit, :update] do
-    resources :friendships
-    resources :requests, only: [:create, :destroy]
+    resources :friendships, only: [:destroy]
+    resources :requests, only: [:create, :destroy] do
+      member do
+        post :accept
+      end
+    end
   end
 
 

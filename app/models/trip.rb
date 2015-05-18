@@ -3,6 +3,7 @@ class Trip < ActiveRecord::Base
   ActsAsTaggableOn.remove_unused_tags = true
 
   belongs_to :user
+  has_many :trips, through: :participants
   has_many :participants, :dependent => :delete_all
   has_many :equipment_lists, :dependent => :delete_all
   has_many :api_access_tokens, :dependent => :delete_all
@@ -19,7 +20,7 @@ class Trip < ActiveRecord::Base
 
   def geocode_start_loc
     coords = Geocoder.coordinates(self.start_loc)
-    if coords.nil? || coords.empty?
+    if coords.blank?
       self.start_loc_latitude = nil
       self.start_loc_longitude = nil
     else
@@ -30,7 +31,7 @@ class Trip < ActiveRecord::Base
 
   def geocode_end_loc
     coords = Geocoder.coordinates(self.end_loc)
-    if coords.nil? || coords.empty?
+    if coords.blank?
       self.end_loc_latitude = nil
       self.end_loc_longitude = nil
     else
