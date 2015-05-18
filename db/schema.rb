@@ -157,6 +157,17 @@ ActiveRecord::Schema.define(version: 20150513153130) do
 
   add_index "requests", ["user_id", "receiver_id"], name: "index_requests_on_user_id_and_receiver_id", unique: true
 
+  create_table "routes", force: :cascade do |t|
+    t.string   "title"
+    t.string   "desc"
+    t.boolean  "public"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "trip_id"
+  end
+
+  add_index "routes", ["trip_id"], name: "index_routes_on_trip_id"
+
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
@@ -225,5 +236,17 @@ ActiveRecord::Schema.define(version: 20150513153130) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "waypoints", force: :cascade do |t|
+    t.string   "desc"
+    t.decimal  "lat"
+    t.decimal  "lng"
+    t.string   "typ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "route_id"
+  end
+
+  add_index "waypoints", ["route_id"], name: "index_waypoints_on_route_id"
 
 end

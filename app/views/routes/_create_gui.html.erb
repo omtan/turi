@@ -1,0 +1,159 @@
+
+    var undoButtonOptions = {
+        'text': '',  // string
+        'iconUrl': myURL + 'images/Undo.png',  // string
+        'onClick': undoOnClick,  // callback function
+        'hideText': true,  // bool
+        'maxWidth': 30,  // number
+        'doToggle': false,  // bool
+        'toggleStatus': false  // bool
+    };
+
+    var resetButtonOptions = {
+        'text': '',  // string
+        'iconUrl': myURL + 'images/Reset.png',  // string
+        'onClick': resetOnClick,  // callback function
+        'hideText': true,  // bool
+        'maxWidth': 30,  // number
+        'doToggle': false,  // bool
+        'toggleStatus': false  // bool
+    };
+
+    // button (used as a UNDO button atm)
+    var undoButton = new L.Control.Button(undoButtonOptions).addTo(map);
+
+    var resetButton = new L.Control.Button(resetButtonOptions).addTo(map);
+
+    // function to be called on mouse click
+    function onMapClick(e)
+    {
+        console.log("someone clicked my map");
+
+        popup
+                .setLatLng(e.latlng)
+                .setContent("waypoint #"+markers.length.toString())
+                .openOn(map);
+
+
+        var temp = L.marker(e.latlng, {icon: wayPointIcon})
+                .bindPopup("waypoint #"+markers.length.toString());
+
+        temp.title = "waypoint #"+markers.length.toString();
+
+
+        // This is some hackish thing to get the server to understand the waypoint data. Should be some
+        // more eloquent way to do this...
+        console.log("Putting field %d", markers.length);
+        var lat = temp.getLatLng().lat;
+        var lng = temp.getLatLng().lng;
+        console.log("Lat is %f", lat);
+        console.log("Lng is %f", lng);
+
+        var form_title = '<input ' +
+                'id="route_waypoints_attributes_' + markers.length + '_desc" ' +
+                'type="text" value="' + temp.title + '" ' +
+                'name="route[waypoints_attributes][' + markers.length + '][desc]">';
+        var form_lat = '<input ' +
+                'id="route_waypoints_attributes_' + markers.length + '_lat" ' +
+                'type="number" value="' + lat + '" ' +
+                'name="route[waypoints_attributes][' + markers.length + '][lat]">';
+        var form_lng = '<input ' +
+                'id="route_waypoints_attributes_' + markers.length + '_lng" ' +
+                'type="number" value="' + lng + '" ' +
+                'name="route[waypoints_attributes][' + markers.length + '][lng]">';
+
+
+        var form_type = '<select id="route_waypoints_attributes_' + markers.length + '_typ"' +
+                ' name="route[waypoints_attributes][' + markers.length + '][typ]">>' +
+                '<option value="wayPointIcon">Blue Dot</option>' +
+                '<option value="startIcon">Green Pin</option>' +
+                '<option value="endIcon">Red Pin</option>' +
+                '<option value="oldIcon">Blue Pin</option>' +
+                '</select>';
+
+//        var form_type = '<input ' +
+//                'id="route_waypoints_attributes_' + markers.length + '_typ" ' +
+//                'type="text" ' +
+//                'value="' + temp.options.icon.options.iconUrl.toString() + '" ' +
+//                'name="route[waypoints_attributes][' + markers.length + '][typ]">';
+
+        console.log("Form_title: %s", form_title);
+        console.log("Form_lat: %s", form_lat);
+        console.log("Form_lng: %s", form_lng);
+        console.log("Form_type: %s", form_type);
+
+        //addInputFieldForWaypoint(temp);
+        if (form_title) {
+
+
+            $('#waypoint-list').append(
+                    "<li>" + form_title + form_lat + form_lng + form_type
+            );
+        }
+
+
+        markers.push(temp);
+
+        drawMap();
+
+    }
+
+
+    function resetOnClick() {
+
+        if (markers.length > 0) {
+            var temp = markers[0].getLatLng();
+
+            //while (latlngs.length > 0) {
+            //    latlngs.pop();
+            //}
+            while (markers.length > 0) {
+                markers.pop();
+            }
+
+            popup
+                    .setLatLng(temp)
+                    .setContent("route removed.")
+                    .openOn(map);
+
+            drawMap();
+        } else {
+            console.log("nothing to reset");
+        }
+
+        // remove all waypoint fields except one
+        while($('#waypoint-list li').length > 0)
+            $('#waypoint-list li').last().remove();
+
+    }
+
+
+    // handle button clicks, button is atm a UNDO button
+    function undoOnClick() {
+        console.log("someone clicked my button");
+
+        if (markers.length > 0) {
+            popup
+                    .setLatLng(markers[markers.length - 1].getLatLng())
+                    .setContent("waypoint removed.")
+                    .openOn(map);
+            //latlngs.pop();
+            markers.pop();
+
+            drawMap();
+        } else {
+            console.log("nothing to undo");
+        }
+
+        // Also remove entry from form, except the last one
+        if($('#waypoint-list li').length > 0)
+        {
+            $('#waypoint-list li').last().remove();
+        }
+
+
+
+    }
+
+    // Event handler for mouse clicks
+    map.on('click', onMapClick);

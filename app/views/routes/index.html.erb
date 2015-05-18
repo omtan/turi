@@ -1,0 +1,43 @@
+<% page_title t('trip_route_index_title', trip_name: @trip.title).html_safe %>
+
+<% content_for :page_class do %>
+    background-image
+<% end %>
+
+<% content_for :content_header do %>
+    <div class="content-header">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="header-buttons pull-right">
+                <%= link_to raw('<i class="fa fa-plus"></i>'), new_trip_route_path(@trip), id: 'add_route_button',class: 'btn btn-lg btn-effect-ripple',data: { no_turbolink: true } %>
+          </div>
+          <div class="header-section">
+            <h1><%= t('trip_route_index', trip_name: @trip.title).html_safe %></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+<% end %>
+
+
+<div class="row">
+  <div class="col-lg-offset-3 col-lg-6">
+
+    <div class="row">
+    <% @routes.each do |route| %>
+        <div class="col-lg-12">
+          <div class="block">
+            <div class="block-title">
+              <a href="<%= trip_route_path(@trip, route) %>"><h2><%= route.title %></h2></a>
+              <div class="pull-right">
+                <h2><%= route.created_at.strftime('%B %d, %Y') %></h2>
+              </div>
+            </div>
+            <%= route.desc %>
+          </div>
+        </div>
+    <%end%>
+    </div>
+
+  </div>
+</div>

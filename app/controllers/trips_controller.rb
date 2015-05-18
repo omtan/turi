@@ -6,8 +6,8 @@ class TripsController < ApplicationController
   def show
     # redirect to public view if the current_user is not a Participant and the trip is public
     if (not TripPolicy.new(current_user, @trip).show?) && @trip.public
-        redirect_to :controller => 'trip_public', :action => 'show', :id => @trip.id
-        return
+      redirect_to :controller => 'trip_public', :action => 'show', :id => @trip.id
+      return
     end
     authorize @trip
     @tags = @trip.tag_counts_on(:tags)
@@ -69,6 +69,6 @@ class TripsController < ApplicationController
 
   private
   def trip_params
-      params.require(:trip).permit(:title, :description, :start_loc, :start_date, :end_loc, :end_date, :image, :tag_list, :public, :public_gallery, :price)
+    params.require(:trip).permit(:title, :description, :start_loc, :start_date, :end_loc, :end_date, :image, :tag_list, :public, :public_gallery, :price)
   end
 end

@@ -1,0 +1,86 @@
+
+        var map = L.map('map', {
+            center: [50.0, 40.0],
+            minZoom: 2,
+            zoom: 3
+        });
+
+        L.tileLayer('http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+            subdomains: ['otile1', 'otile2', 'otile3', 'otile4'],
+            continousWorld: false,
+            noWrap: true
+        }).addTo(map);
+
+        var myURL = "<%= asset_path('app/maps/') %>"
+
+        var wayPointIcon = L.icon({
+            iconUrl: myURL + 'images/Waypoint.png',
+            iconRetinaUrl: myURL + 'images/pin48.png',
+            iconSize: [29, 24],
+            iconAnchor: [9, 21],
+            popupAnchor: [0, -14]
+        });
+
+        var startIcon = L.icon({
+            iconUrl: myURL + 'images/Start.png',
+            iconRetinaUrl: myURL + 'images/pin48.png',
+            iconSize: [29, 24],
+            iconAnchor: [9, 21],
+            popupAnchor: [0, -14]
+        });
+
+        var endIcon = L.icon({
+            iconUrl: myURL + 'images/End.png',
+            iconRetinaUrl: myURL + 'images/pin48.png',
+            iconSize: [29, 24],
+            iconAnchor: [9, 21],
+            popupAnchor: [0, -14]
+        });
+
+        // layer for holding the route (markers and lines)
+        var waypointLayer = L.layerGroup();
+
+        // array for holding the coordinates
+        //var latlngs = Array();
+
+        //array for holding markers
+        var markers = Array();
+
+        // var to hold popup
+        var popup = L.popup();
+
+
+        function drawMap() {
+            // clear old waypoint layer
+            waypointLayer.clearLayers();
+
+
+            if (markers.length != 0) {
+                markers[0].setIcon(startIcon);
+            }
+
+
+            // adds all makers to waypoint layer
+            for (var i = 0; i < markers.length; i++) {
+
+
+                markers[i].addTo(waypointLayer);
+
+                if (i != 0) {
+                    // adds all lines to the waypoint layer
+                    L.polyline([markers[i - 1].getLatLng(), markers[i].getLatLng()], {color: 'red'})
+                            .addTo(waypointLayer);
+                }
+            }
+
+
+            // draw waypoint layer to map
+            waypointLayer.addTo(map);
+
+        }
+
+
+        // zoom the map to the polyline when a route is loaded on start-up
+        //map.fitBounds(polyline.getBounds());
+

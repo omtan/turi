@@ -9,6 +9,7 @@ class Trip < ActiveRecord::Base
   has_many :events, :dependent => :delete_all
   has_many :articles, :dependent => :delete_all
   has_many :discussions, :dependent => :delete_all
+  has_many :routes, :dependent => :delete_all
 
   validates_presence_of :title
   validates :price, numericality: { greater_than_or_equal_to: 0 }

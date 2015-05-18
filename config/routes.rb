@@ -23,6 +23,10 @@ Rails.application.routes.draw do
     end
     resources :events
     resources :articles
+    resources :routes do
+      resources :waypoints
+    end
+
     resources :discussions do
       resources :comments
     end
@@ -36,6 +40,7 @@ Rails.application.routes.draw do
     resources :friendships
     resources :requests, only: [:create, :destroy]
   end
+
 
   get '/dashboard', to: 'dashboard#index', as: 'dashboard'
 

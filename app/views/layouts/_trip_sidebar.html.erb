@@ -11,8 +11,10 @@
     <a href="<%=trip_participants_path(@trip)%>"><i class="gi gi-parents sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide"><%=t('trip_participants')%></span></a>
   </li>
 
-  <li class="">
-    <a href="#"><i class="gi gi-direction sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Routes</span></a>
+  <li class="<%=current_page?(trip_routes_path(@trip)) ? 'active' : ''%>">
+    <%= link_to trip_routes_path(@trip) do %>
+        <i class="gi gi-direction sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide"> <%=t('trip_route_index_title')%> </span>
+    <% end %>
   </li>
 
   <li class="<%=current_page?(trip_equipment_lists_path(@trip)) ? 'active' : ''%>">
@@ -21,7 +23,7 @@
 
   <li class="<%= current_page?(trip_discussions_path(@trip)) ? 'active' : '' %>">
     <%= link_to trip_discussions_path(@trip), id: 'discussion-btn' do %>
-        <i class="gi gi-group sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Discussion</span>
+        <i class="gi gi-group sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide"> <%=t('discussion')%></span>
     <% end %>
   </li>
 

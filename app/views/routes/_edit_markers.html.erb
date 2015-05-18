@@ -1,0 +1,176 @@
+<script>
+
+
+
+    var map = L.map('map', {
+        center: [50.0, 40.0],
+        minZoom: 2,
+        zoom: 3
+    });
+
+    L.tileLayer('http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+        subdomains: ['otile1', 'otile2', 'otile3', 'otile4'],
+        continousWorld: false,
+        noWrap: true
+    }).addTo(map);
+
+    var myURL = "<%= asset_path('app/maps/') %>"
+
+    var oldIcon = L.icon({
+        iconUrl: myURL + 'images/myButton.png',
+        iconRetinaUrl: myURL + 'images/pin48.png',
+        iconSize: [29, 24],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+    });
+
+    var wayPointIcon = L.icon({
+        iconUrl: myURL + 'images/Waypoint.png',
+        iconRetinaUrl: myURL + 'images/pin48.png',
+        iconSize: [29, 24],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+    });
+
+    var startIcon = L.icon({
+        iconUrl: myURL + 'images/Start.png',
+        iconRetinaUrl: myURL + 'images/pin48.png',
+        iconSize: [29, 24],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+    });
+
+    var endIcon = L.icon({
+        iconUrl: myURL + 'images/End.png',
+        iconRetinaUrl: myURL + 'images/pin48.png',
+        iconSize: [29, 24],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+    });
+
+    // layer for holding the route (markers and lines)
+    var waypointLayer = L.layerGroup();
+
+    //array for holding markers
+    var markers = new Array();
+
+    // var to hold popup
+    var popup = L.popup();
+
+
+    var waypoints = new Array();
+
+    var bounded = false;
+
+    function drawMap() {
+        // clear old waypoint layer
+        waypointLayer.clearLayers();
+
+
+        if (markers.length != 0) {
+            markers[0].setIcon(startIcon);
+
+            if (markers.length > 1)
+                markers[markers.length-1].setIcon(endIcon);
+        }
+
+        var     maxLat=-90, minLat=90,
+                maxLng=-180, minLng=180;
+
+        // adds all makers to waypoint layer
+        for (var i = 0; i < markers.length; i++) {
+
+
+            markers[i].addTo(waypointLayer);
+
+            if (i != 0) {
+                // adds all lines to the waypoint layer
+                L.polyline([markers[i - 1].getLatLng(), markers[i].getLatLng()], {color: 'red'})
+                        .addTo(waypointLayer);
+            }
+
+
+            // Find the extreme points of the route to fit the bounds to
+            if (maxLat < markers[i].getLatLng().lat)
+                maxLat = markers[i].getLatLng().lat;
+
+            if (minLat > markers[i].getLatLng().lat)
+                minLat = markers[i].getLatLng().lat;
+
+            if (maxLng < markers[i].getLatLng().lng)
+                maxLng = markers[i].getLatLng().lng;
+
+            if (minLng > markers[i].getLatLng().lng)
+                minLng = markers[i].getLatLng().lng;
+
+        }
+
+
+        var bounds = [[minLat, minLng],[maxLat, maxLng]];
+
+
+        // Fit the bounds of the map view to the extreme points of the route.
+        if (bounded == false) {
+            map.fitBounds(bounds);
+            bounded = true;
+        }
+        // draw waypoint layer to map
+        waypointLayer.addTo(map);
+
+    }
+
+
+    $("#waypoint-table tbody tr").each(function() {
+
+        var table = {
+            desc: $(this).find("#desc").val(),
+            lat: $(this).find("#lat").val(),
+            lng: $(this).find("#lng").val(),
+            typ: $(this).find("#typ").val()
+        }
+
+        console.log($(this).find("#desc").val());
+        waypoints.push(table);
+        //[$("#desc").val(), $("#lat").val(), $("#lng").val(), $("#typ").val()]
+    });
+
+
+
+    for(var i = 0; i < waypoints.length; i++) {
+
+        var icon;
+        switch (waypoints[i].typ) {
+            case "wayPointIcon":
+                icon = wayPointIcon;
+                break;
+            case "startIcon":
+                icon = startIcon;
+                break;
+            case "endIcon":
+                icon = endIcon;
+                break;
+            case "oldIcon":
+                icon = oldIcon;
+                break;
+            default:
+                icon = wayPointIcon;
+        }
+
+        var temp = L.marker([waypoints[i].lat, waypoints[i].lng], {icon: icon})
+                .bindPopup(waypoints[i].desc);
+
+        markers.push(temp);
+        //console.log(i);
+        //console.log(waypoints[i].desc);
+    }
+
+
+    //temp.addTo(map);
+
+    drawMap();
+
+
+
+</script>
+

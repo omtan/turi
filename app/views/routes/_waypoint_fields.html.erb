@@ -1,0 +1,13 @@
+
+<%= fields_for :waypoint do |f| %>
+    <li>
+      <%= f.label :desc, 'Description' %>
+      <%= f.text_field :desc %>
+      <%= f.label :lat, 'Lat' %>
+      <%= f.number_field :lat, :step => 'any' %>
+      <%= f.label :lng, 'Lng' %>
+      <%= f.number_field :lng, :step => 'any' %>
+      <%= f.label :typ, 'Type' %>
+      <%= f.text_field :typ %>
+    </li>
+<% end %>
