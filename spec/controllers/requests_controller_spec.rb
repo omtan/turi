@@ -7,6 +7,7 @@ RSpec.describe RequestsController, type: :controller do
     @user_two = FactoryGirl.create(:user)
 
     sign_in(@user_one)
+    request.env["HTTP_REFERER"] = root_path
   end
 
   describe "POST #create" do
@@ -33,25 +34,33 @@ RSpec.describe RequestsController, type: :controller do
       it 'does not create a friend request to someone who doesnt exist' do
         expect {
           post :create, user_id: @user_one.id, receiver_id: 3837
-        }.to_not change(Request, :count)
+        }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      it 'does not render a user page that doesnt exist' do
-        post :create, user_id: @user_one.id, receiver_id: 3837
-        expect(response).to redirect_to user_path @user_one
-      end
     end
   end
+
+  describe 'POST #accept' do
+    before do
+        @friendRequest = Request.create(user_id: @user_one.id, receiver_id: @user_two.id)
+    end
+    it "Deleted the request and creates a Friendship when the request is accepted" do
+        expect {
+            post :accept, :user_id => @user_one, :id => @friendRequest.id
+        }.to change(Request, :count).by(-1) and change(Friendship, :count).by(1)
+    end 
+  end
+
+
 
   describe 'DELETE #destroy' do
     before do
       @friendRequest = Request.create(user_id: @user_one.id, receiver_id: @user_two.id)
-      #puts @friendRequest.inspect
     end
     context 'with valid attributes' do
       it 'the requesting user destroys the request' do
         expect {
-          delete :destroy, user_id: @user_one, id: @friendRequest
+            delete :destroy, :user_id => @user_one, id: @friendRequest.id
         }.to change(Request, :count).by(-1)
       end
 
@@ -59,33 +68,29 @@ RSpec.describe RequestsController, type: :controller do
         sign_out(@user_one)
         sign_in(@user_two)
         expect {
-          delete :destroy, user_id: @user_two, id: @friendRequest
+            delete :destroy, user_id: @user_one, id: @friendRequest
         }.to change(Request, :count).by(-1)
       end
 
       it 'the requesting user renders your user page' do
         delete :destroy, user_id: @user_one, id: @friendRequest
-        expect(response).to redirect_to user_path @user_one
+        expect(response).to redirect_to root_path # redirect_to :back
       end
 
       it 'the requested user renders the requesting user page' do
         sign_out @user_one
         sign_in @user_two
-        delete :destroy, user_id: @user_two, id: @friendRequest
-        expect(response).to redirect_to user_path @user_two
+        delete :destroy, user_id: @user_one, id: @friendRequest
+        expect(response).to redirect_to root_path
       end
     end
 
+    # Should not happend!
     context 'with invalid attributes' do
       it 'doesnt destroy a request' do
         expect {
           delete :destroy, user_id: @user_one, id: 231
-        }.to_not change(Request, :count)
-      end
-
-      it 'renders the user page' do
-        delete :destroy, user_id: @user_one, id: 1231
-        expect(response).to redirect_to user_path @user_one
+        }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
     end

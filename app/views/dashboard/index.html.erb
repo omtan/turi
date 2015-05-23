@@ -89,7 +89,7 @@
                                   method: :post do %>
                           <%= t('user_request_accept') %>
                       <% end %>
-                      <%= link_to user_request_path(current_user, request.id),
+                      <%= link_to user_request_path(request.user, request.id),
                                   id: "remove_friend_request_#{request.user.name}",
                                   method: :delete do %>
                           <%= t('user_request_remove') %>

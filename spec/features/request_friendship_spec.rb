@@ -62,12 +62,19 @@ RSpec.feature 'Request and friendship' do
 
             expect(page).to have_content(I18n.t('user_friendship_confirmed'))
 
-            expect(page.current_path).to eq(user_path(@userTwo))
+            # redirects :back
+            expect(page.current_path).to eq(user_path(@userOne))
             
+            within "#friendship_widget" do
+                expect(page).to have_content(@userTwo.name)
+            end
+
+            visit user_path(@userTwo)
             within "#friendship_widget" do
                 expect(page).to have_content(@userOne.name)
                 expect(page).to have_selector(:link_or_button, "delete_friend_#{@userOne.name}")
             end
+
       end 
 
 end

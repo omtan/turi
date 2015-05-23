@@ -33,12 +33,6 @@ RSpec.feature 'Friendship' do
           expect(page).to have_selector(:link_or_button, "delete_friend_#{@userTwo.name}")
         end
 
-        click_link "delete_friend_#{@userTwo.name}"
-
-        within("#friendship_widget") do
-          expect(page).to_not have_content "#{@userTwo.name}"
-          expect(page).to_not have_selector(:link_or_button, "delete_friend_#{@userTwo.name}")
-        end
       end
 
       scenario 'the view is correct for the added friend' do
@@ -60,6 +54,7 @@ RSpec.feature 'Friendship' do
       end
 
       scenario 'it is removed for the unfriended' do
+        visit user_path(@userTwo)
         click_link "delete_friend_#{@userTwo.name}"
         logout
         login_as(@userTwo, scope: :user)

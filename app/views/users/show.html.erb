@@ -32,9 +32,9 @@
                         <div class="widget-heading themed-background-dark text-light-op" id="friendship_div">
                             <% if current_user.id != @user.id %>
 
-                                <% if @current_user_request.nil? and @user_request.nil? and @friendship.nil? %>
+                                <% if @current_user_request.blank? and @user_request.blank? and @friendship.blank? %>
                                     <!-- Request a Friendship -->
-                                    <%= link_to user_requests_path(current_user, receiver_id: @user.id),
+                                    <%= link_to user_requests_path(current_user.id, receiver_id: @user.id),
                                         method: :post,
                                         id: 'create_request_id' do %>
                                         <%= t('user_friendship_add_friend') %>
@@ -42,7 +42,7 @@
 
                                 <% elsif @user_request.present? %>
                                     <!-- Accept Friendship Request -->
-                                    <%= link_to accept_user_request_path(@user, @user_request),
+                                    <%= link_to accept_user_request_path(@user.id, @user_request),
                                         id: "accept_friend_request_#{@user.name}",
                                         method: :post do %>
                                         <%= t('user_request_accept') %>
@@ -50,7 +50,7 @@
 
                                 <% elsif @current_user_request.present? %>
                                     <!-- Remove Friendship Request -->
-                                    <%= link_to user_request_path(current_user, @current_user_request),
+                                    <%= link_to user_request_path(current_user.id, @current_user_request),
                                         method: :delete,
                                         id: 'remove_request_id' do %>
                                         <%= t('user_request_remove') %>
@@ -58,7 +58,7 @@
 
                                 <% else %>
                                     <!-- Remove Friendship -->
-                                    <%= link_to user_friendship_path(@user, @friendship),
+                                    <%= link_to user_friendship_path(@friendship.user_id, @friendship),
                                         id: "delete_friend_#{@user.name}",
                                         method: :delete do %>
                                         <%= t('user_friendship_remove') %>

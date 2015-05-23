@@ -11,29 +11,6 @@ RSpec.describe FriendshipsController, type: :controller do
     @friendRequest = FactoryGirl.create(:request, user_id: @user.id, receiver_id: @friend.id)
   end
 
-  describe 'POST #create' do
-
-    it 'should create a friendship with an existing request and redirect to the user_path' do
-
-      expect {
-        post :create, user_id: @user.id, friend_id: @friend.id
-      }.to change(Friendship, :count).by(1)
-      expect(flash[:notice]).to eql(I18n.t('user_friendship_confirmed'))
-
-      expect(response).to redirect_to user_path(@user)
-    end
-
-    it 'should not create a friendship without an existing request and redirect to user_path' do
-      expect {
-        post :create, user_id: @user.id, friend_id: 5
-      }.to change(Friendship, :count).by(0)
-
-      expect(flash[:alert]).to eql(I18n.t('user_friendship_not_confirmed'))
-      expect(response).to redirect_to user_path @user
-    end
-
-
-  end
 
   describe 'DELETE #destroy' do
 
@@ -47,17 +24,6 @@ RSpec.describe FriendshipsController, type: :controller do
       expect(flash[:notice]).to eql(I18n.t('user_friendship_removed'))
       expect(response).to redirect_to user_path(@user)
     end
-
-    # I would say this is nothing to worry about, since we not show any Friendships that doesnt exists.  
-    #it 'should not delete a friendship if a friendship doesnt exist, and redirect to current user' do
-    #  expect {
-    #    delete :destroy, user_id: @user, id: 3
-    #  }.to change(Friendship, :count).by(0)
-    #
-    #  expect(flash[:alert]).to eql(I18n.t('user_friendship_not_removed'))
-    #  expect(response).to redirect_to user_path(@user)
-    #end
-
   end
 
 end
