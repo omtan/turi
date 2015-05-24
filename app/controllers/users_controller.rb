@@ -20,8 +20,10 @@ class UsersController < ApplicationController
     end
     @public_trips = Kaminari.paginate_array(public_trips).page(params[:trips]).per(3)
 
-    @requests = Request.where('(user_id LIKE ? AND receiver_id  LIKE ?) OR (user_id LIKE ? AND receiver_id LIKE ?)', @user.id, current_user.id, current_user.id, @user.id)
-    @friendships = Friendship.where('(user_id LIKE ? AND friend_id  LIKE ?) OR (user_id LIKE ? AND friend_id LIKE ?)', @user.id, current_user.id, current_user.id, @user.id)
+    @current_user_request = current_user.requests.where(receiver_id: @user.id).first
+    @user_request = @user.requests.where(receiver_id: current_user.id).first
+
+    @friendship = Friendship.between_users @user, current_user
   end
 
   def edit

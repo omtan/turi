@@ -83,9 +83,9 @@ en:
   edit_user:                      "Edit user"
 
   # Widgets
-  widget_public_description:     "Click to see how other users see your trip."
-  widget_private_description:     "Click to edit the trip settings."
-  widget_equipment_costs_description: "Calculated equipment lists price."
+  widget_public_description:     "Click for public view"
+  widget_private_description:     "Click to edit the trip"
+  widget_equipment_costs_description: "Equipment price"
 
   #Trips (trip_controller)
   trip_title:                     "Title"
@@ -276,7 +276,6 @@ en:
   user_friendship_remove:                 "Remove friendship"
   user_friendship_removed:                "Removed friendship."
   user_friendship_confirmed:              "Successfully confirmed friend!"
-  user_friendship_not_removed:            "Could not remove friendship!"
   user_friendship_not_confirmed:          "Could not confirm friendship!"
   user_friendship_add_friend:             "Add Friend"
       
@@ -286,9 +285,7 @@ en:
   user_request_not_added:                 "Unable to request friend."
   user_request_not_confirmed:             "Request was successfully not confirmed, you didn't want that person as your friend."
   user_request_not_yourself:              "Can't request to be friend with yourself"
-  user_request_not_exist:                 "Can't request to be friend with someone who doens't exist"
   user_request_destroyed:                 "Request removed."
-  user_request_destroy_not_exist:         "Request does not exist"
   user_request_destroy_not_destroyed:     "Request not removed."
   user_request_remove:                    "Remove friend request"
   user_request_accept:                    "Accept friend request"

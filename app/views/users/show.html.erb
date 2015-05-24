@@ -31,35 +31,38 @@
                     <div class="col-md-2 col-md-offset-5">
                         <div class="widget-heading themed-background-dark text-light-op" id="friendship_div">
                             <% if current_user.id != @user.id %>
-                                <!-- Request a Friendship -->
-                                <% if @requests.blank? and @friendships.blank? %>
-                                    <%= link_to user_requests_path(user_id: current_user.id, receiver_id: @user.id),
+
+                                <% if @current_user_request.blank? and @user_request.blank? and @friendship.blank? %>
+                                    <!-- Request a Friendship -->
+                                    <%= link_to user_requests_path(current_user.id, receiver_id: @user.id),
                                         method: :post,
                                         id: 'create_request_id' do %>
                                         <%= t('user_friendship_add_friend') %>
                                     <% end %>
 
-                                <!-- FIXME if a request is made, the reciver should be able to accept it when they look at the requestors user page -->
-                            <% elsif !@requests[0].blank? && @requests[0].user_id == @user.id && @requests[0].receiver_id == current_user.id %>
-                                    <%= link_to user_friendships_path(current_user, friend_id: @user.id),
+                                <% elsif @user_request.present? %>
+                                    <!-- Accept Friendship Request -->
+                                    <%= link_to accept_user_request_path(@user.id, @user_request),
                                         id: "accept_friend_request_#{@user.name}",
                                         method: :post do %>
                                         <%= t('user_request_accept') %>
                                     <% end %>
+
+                                <% elsif @current_user_request.present? %>
                                     <!-- Remove Friendship Request -->
-                                <% elsif @friendships.blank? %>
-                                    <%= link_to user_request_path(@user, @requests[0].id),
+                                    <%= link_to user_request_path(current_user.id, @current_user_request),
                                         method: :delete,
                                         id: 'remove_request_id' do %>
-                                        <i class="fa fa-minus"></i> <%= t('user_request_remove') %>
-                                <% end %>
-                            <% else %>
-                                <!-- Remove Friendship -->
-                                <%= link_to user_friendship_path(@user, @friendships[0].id),
-                                    id: "delete_friend_#{@user.name}",
-                                    method: :delete do %>
-                                    <%= t('user_friendship_remove') %>
-                                <% end %>
+                                        <%= t('user_request_remove') %>
+                                    <% end %>
+
+                                <% else %>
+                                    <!-- Remove Friendship -->
+                                    <%= link_to user_friendship_path(@friendship.user_id, @friendship),
+                                        id: "delete_friend_#{@user.name}",
+                                        method: :delete do %>
+                                        <%= t('user_friendship_remove') %>
+                                    <% end %>
                             <% end %>
                         <% end %>
                         </div>
@@ -104,8 +107,8 @@
                                 <% if current_user == @user %>
                                     <td class="pull-right" style="margin-top: 30px; margin-right: 20px;">
                                         <!-- Is there a better way? -->
-                                        <% friendship_record = Friendship.where('(user_id LIKE ? AND friend_id  LIKE ?) OR (user_id LIKE ? AND friend_id LIKE ?)', user.id, current_user.id, current_user.id, user.id) %>
-                                        <%= link_to user_friendship_path(@user, :id => friendship_record[0].id),
+                                        <% friendship_record = Friendship.between_users user, current_user %>
+                                        <%= link_to user_friendship_path(@user, :id => friendship_record.id),
                                             id: "delete_friend_#{user.name}",
                                             title: "remove #{user.name}",
                                             method: :delete do %>
