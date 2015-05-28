@@ -1,4 +1,4 @@
-class App::ExploreController < ApplicationController
+class ExploreController < ApplicationController
 
   before_action :authenticate_user!
 
@@ -7,7 +7,8 @@ class App::ExploreController < ApplicationController
 
   def list
     @trips = Trip.where(public: true)
-                 .where.not(start_loc: nil).where.not(start_loc: '')
+                 .where.not(start_loc: nil)
+                 .where.not(start_loc: '')
                  .where.not(start_loc_latitude: nil)
                  .where.not(start_loc_longitude: nil)
 

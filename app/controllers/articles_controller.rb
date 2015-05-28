@@ -1,8 +1,4 @@
-class ArticlesController < ApplicationController
-  layout 'trip'
-
-  before_action :set_trip
-  before_action :authenticate_user!
+class ArticlesController < TripResourceController
 
   def index
     authorize @trip, :show?
@@ -60,10 +56,6 @@ class ArticlesController < ApplicationController
   end
 
   private
-
-  def set_trip
-    @trip = Trip.find(params[:trip_id])
-  end
 
   def article_params
     params.require(:article).permit(:title, :content, :public)
