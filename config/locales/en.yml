@@ -85,7 +85,7 @@ en:
   # Widgets
   widget_public_description:     "Click for public view"
   widget_private_description:     "Click to edit the trip"
-  widget_equipment_costs_description: "Equipment price"
+  widget_equipment_costs_description: "Estimated trip price"
 
   #Trips (trip_controller)
   trip_title:                     "Title"

@@ -1,10 +1,10 @@
-<a href="<%= trip_equipment_lists_path @trip %>" class="widget">
+<a href="<%= edit_trip_path @trip %>" class="widget">
   <div class="widget-content widget-content-mini text-right clearfix">
     <div class="widget-icon pull-left themed-background-warning">
       <i class="gi gi gi-wallet text-light-op"></i>
     </div>
     <h2 class="widget-heading h3 text-warning">
-      <strong>$ <span data-toggle="counter" data-to="2835"></span></strong>
+      <strong>$ <%= @trip.price %></strong>
     </h2>
     <span class="text-muted"><%= t :widget_equipment_costs_description %></span>
   </div>

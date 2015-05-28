@@ -4,11 +4,16 @@
     <i class="gi gi-group"></i> <%= t :discussions %>
   </div>
   <div class="widget-content widget-content-full">
+    <% recent_discussions = fetch_recent_discussions(@trip) %>
+    <% if recent_discussions.blank? %>
+        <p style="padding: 10px"><%= link_to t(:trip_discussions_new_btn), new_trip_discussion_path(@trip) %></p>
+    <% else %>
     <table class="table table-borderless table-striped table-vcenter">
       <tbody>
-      <%= render @trip.discussions.order(:updated_at).reverse_order.limit(5) %>
+      <%= render recent_discussions %>
       </tbody>
     </table>
+    <% end %>
   </div>
 </div>
 <!-- END People Widget -->

@@ -1,11 +1,11 @@
-<a href="/path/to/routes" class="widget">
+<a href="<%= trip_routes_path(@trip) %>" class="widget">
   <div class="widget-content widget-content-mini text-right clearfix">
     <div class="widget-icon pull-left themed-background-info">
       <i class="gi gi-compass text-light-op"></i>
     </div>
     <h2 class="widget-heading h3 text-info">
-      <strong><span data-toggle="counter" data-to="365"></span></strong>
+      <strong><%= @trip.routes.count %></strong>
     </h2>
-    <span class="text-muted">KM to walk</span>
+    <span class="text-muted">Routes created</span>
   </div>
 </a>

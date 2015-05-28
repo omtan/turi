@@ -4,11 +4,16 @@
     <i class="gi gi-calendar"></i> <%= t :trip_events_upcoming %>
   </div>
   <div class="widget-content widget-content-full">
+    <% upcoming_events = fetch_upcoming_events(@trip) %>
+    <% if upcoming_events.blank? %>
+        <p style="padding: 10px"><%= t :trip_events_no_upcoming %> - <%= link_to t(:trip_events_new), new_trip_event_path(@trip) %></p>
+    <% else %>
     <table class="table table-borderless table-striped table-vcenter">
       <tbody>
-      <%= render partial: '/widgets/records/event', collection: @trip.events.where('start_date > ?', DateTime.now).order(:start_date).limit(5) %>
+      <%= render partial: '/widgets/records/event', collection: upcoming_events %>
       </tbody>
     </table>
+    <% end %>
   </div>
 </div>
 <!-- END People Widget -->
