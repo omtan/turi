@@ -2,13 +2,7 @@
     <%= @route.title %>
 <% end %>
 
-<% content_for :page_stylesheets do %>
-    <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-<% end %>
-
 <% content_for :page_scripts do %>
-    <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js?2'></script>
-
     <script>
         $(function () {
             <%= render 'routes/map' %>
@@ -19,9 +13,6 @@
 
         });
     </script>
-
-
-
 <% end %>
 
 

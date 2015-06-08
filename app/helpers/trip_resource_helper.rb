@@ -5,7 +5,7 @@ module TripResourceHelper
   end
 
   def fetch_recent_discussions(trip)
-    trip.events.where('start_date > ?', DateTime.now).order(:start_date).limit(5)
+    trip.discussions.order(:updated_at).limit(5)
   end
 
 end
