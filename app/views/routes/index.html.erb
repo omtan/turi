@@ -20,6 +20,16 @@
 <% end %>
 
 
+<% if @routes.empty? and policy(@trip).update? == false %>
+
+    <%= quote_t 'trip_route_empty' %>
+
+<% elsif @routes.empty? and policy(@trip).update? %>
+
+    <%= quote_btn t('trip_route_new_quote'), t('trip_route_new_btn'), new_trip_route_path(@trip), 'add_route_button_empty' %>
+
+<% else %>
+
 <div class="row">
   <div class="col-lg-offset-3 col-lg-6">
 
@@ -41,3 +51,5 @@
 
   </div>
 </div>
+
+<% end %>

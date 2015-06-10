@@ -151,6 +151,9 @@ en:
   trip_route_not_found:           "Route not found."
   trip_route_not_added:           "Route was not created."
   trip_route_added:               "Route created."
+  trip_route_empty:               "No routes created right now. Come back later or ask the trip owner for editor rights!"
+  trip_route_new_quote:           "Plan your routes together with your tripmates."
+  trip_route_new_btn:             "Plan a new route"
 
 
   # equipment_lists
