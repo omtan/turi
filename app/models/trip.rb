@@ -17,6 +17,8 @@ class Trip < ActiveRecord::Base
 
   before_save :geocode_loc
 
+  scope :public_trips, ->  { where(public: true) }
+
   def geocode_loc
       start_coords = Geocoder.coordinates(self.start_loc)
       end_coords = Geocoder.coordinates(self.end_loc)

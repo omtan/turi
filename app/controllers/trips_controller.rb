@@ -16,7 +16,7 @@ class TripsController < ApplicationController
   end
 
   def index
-    @trips =  Trip.all
+      @trips =  Trip.public_trips
   end
 
   def new
