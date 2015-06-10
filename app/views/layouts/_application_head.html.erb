@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="<%= asset_path 'app/css/themes/passion.css' %>">
 
 <!-- Rails -->
-<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
 
 <%= yield :page_stylesheets %>
 <!-- END Stylesheets -->
@@ -55,10 +55,6 @@
 
 <!-- Bootstrap.js, Jquery plugins and Custom JS code -->
 <script src="<%= asset_path 'app/js/vendor/bootstrap.min.js' %>"></script>
-<script src="<%= asset_path 'app/js/plugins.js' %>"></script>
-<script src="<%= asset_path 'app/js/app.js' %>"></script>
-
-<%= yield :page_scripts %>
 
 <!-- Modernizr (browser feature detection library) -->
 <script src="<%= asset_path 'app/js/vendor/modernizr-2.8.3.min.js' %>"></script>

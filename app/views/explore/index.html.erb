@@ -1,3 +1,7 @@
+<% content_for :page_title do %>
+    <%= t 'trip_explore' %>
+<% end %>
+
 <% content_for :page_class do %>
     no-page-padding
 <% end %>
@@ -15,10 +19,16 @@
             $('#map').css('height', $('#page-content').outerHeight() - $('.navbar').outerHeight());
 
             // Initialize the map.
-            var markerIcon = L.AwesomeMarkers.icon({
+            var startMarkerIcon = L.AwesomeMarkers.icon({
                 prefix: 'fa',
                 icon: 'compass',
                 markerColor: 'red'
+            });
+
+            var endMarkerIcon = L.AwesomeMarkers.icon({
+                prefix: 'fa',
+                icon: 'compass',
+                markerColor: 'blue'
             });
 
             map = L.map('map', {
@@ -36,20 +46,55 @@
 
             $.getJSON('<%= api_explore_path %>', function(data) {
                 $.each(data, function(key, trip) {
-                    var tripMarker = new L.marker([trip.lat, trip.long], {icon: markerIcon, url: trip.url});
-                    tripMarker.on('click', onTripMarkerClick);
+                    var tripIcon = trip.type == 'start_loc' ? startMarkerIcon : endMarkerIcon;
+                    var tripMarker = new L.marker([trip.lat, trip.long], {icon: tripIcon, url: trip.url});
+                    var tripPopup = buildMarkerPopup(trip);
+                    tripMarker.bindPopup(tripPopup);
                     markers.addLayer(tripMarker);
                 });
             });
 
             map.addLayer(markers);
 
-        });
+            function buildMarkerPopup(trip) {
+                var popup = '<b>' + trip.title + '</b>';
 
-        function onTripMarkerClick() {
-            window.location.href = this.options.url;
-        }
+                if(trip.start_loc || trip.end_loc || trip.start_date || trip.end_date) popup += '<br/><br/><div>';
+
+                // Locations
+                if(trip.start_loc || trip.end_loc) popup += '<i class="fa fa-compass"></i>&nbsp;';
+                if(trip.start_loc && trip.end_loc) popup += '<i>' + trip.start_loc + ' - ' + trip.end_loc + '</i>';
+                if(trip.start_loc && ! trip.end_loc) popup += '<i>' + trip.start_loc + '</i>';
+                if(! trip.start_loc && trip.end_loc) popup += '<i>' + trip.end_loc + '</i>';
+
+                if(trip.start_loc || trip.end_loc)  popup += '&nbsp;&nbsp;&nbsp;';
+
+                // Dates
+                if(trip.start_date || trip.end_date) popup += '<i class="fa fa-calendar"></i>&nbsp;';
+                if(trip.start_date && trip.end_date) popup += '<i>' + trip.start_date + ' - ' + trip.end_date + '</i>';
+                if(trip.start_date && ! trip.end_date) popup += '<i>' + trip.start_date + '</i>';
+                if(! trip.start_date && trip.end_date) popup += '<i>' + trip.end_date + '</i>';
+
+                if(trip.start_loc || trip.end_loc || trip.start_date || trip.end_date) popup += '</div>';
+
+                // Description
+                if(trip.description) popup += '<br/>' + trip.description;
+
+                // Link
+                popup += '<br/><br/><a href="' + trip.url + '">Visit trip page.</a>';
+
+                return popup;
+            }
+
+        });
     </script>
 <% end %>
 
 <div id="map" class="gmap explore-map"></div>
+
+<div class="widget" style="position: absolute; bottom: 10px; left: 10px;">
+  <div class="widget-content widget-content-mini text-right clearfix">
+    <i class="fa fa-compass text-danger"></i> Start locations
+    <i class="fa fa-compass text-info" style="padding-left: 5px"></i> End locations
+  </div>
+</div>
