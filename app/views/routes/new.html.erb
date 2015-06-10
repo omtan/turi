@@ -47,9 +47,12 @@
                 <div class="form-group">
                     <%= f.text_field :title, :value => t('trip_route_route_title') %> <br>
                     <%= f.text_area :desc, :value => t('trip_route_route_desc') %> <br>
+                    
 
+                    <!-- not implemented yet 
                     <%= f.label :public, class: 'control-label' %>
                     <label class="switch switch-success"><%= f.check_box :public %><span></span></label> <br>
+                    -->
 
                     <%= f.submit t('trip_route_route_save'), class: 'btn btn-primary', data: { no_turbolink: true }%>
                 </div>
