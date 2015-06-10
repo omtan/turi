@@ -3,8 +3,6 @@ class Friendship < ActiveRecord::Base
   # There can only be one friendship, this is why we only catch the first.
   scope :between_users, ->(user_one, user_two) {
     where('(user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)', user_one.id, user_two.id, user_two.id, user_one.id)
-        .limit(1)
-        .first
   }
 
   validates :user_id, :friend_id, presence: true

@@ -33,30 +33,33 @@
                             <% if current_user.id != @user.id %>
 
                                 <% if @current_user_request.blank? and @user_request.blank? and @friendship.blank? %>
-                                    <!-- Request a Friendship -->
+                                    <!-- Request a Friendship if no request or friendship is present -->
                                     <%= link_to user_requests_path(current_user.id, receiver_id: @user.id),
                                         method: :post,
                                         id: 'create_request_id' do %>
                                         <%= t('user_friendship_add_friend') %>
                                     <% end %>
+                                <% end %>
 
-                                <% elsif @user_request.present? %>
-                                    <!-- Accept Friendship Request -->
+                                <% if @user_request.present? %>
+                                    <!-- Display accept friendship request link if request is present -->
                                     <%= link_to accept_user_request_path(@user.id, @user_request),
                                         id: "accept_friend_request_#{@user.name}",
                                         method: :post do %>
                                         <%= t('user_request_accept') %>
                                     <% end %>
+                                <% end %>
 
-                                <% elsif @current_user_request.present? %>
-                                    <!-- Remove Friendship Request -->
+                                <% if @current_user_request.present? %>
+                                    <!-- Display remove friendship request link if the current user started the request -->
                                     <%= link_to user_request_path(current_user.id, @current_user_request),
                                         method: :delete,
                                         id: 'remove_request_id' do %>
                                         <%= t('user_request_remove') %>
                                     <% end %>
+                                <% end %>
 
-                                <% else %>
+                                <% if @friendship.present? %>
                                     <!-- Remove Friendship -->
                                     <%= link_to user_friendship_path(@friendship.user_id, @friendship),
                                         id: "delete_friend_#{@user.name}",
@@ -107,7 +110,7 @@
                                 <% if current_user == @user %>
                                     <td class="pull-right" style="margin-top: 30px; margin-right: 20px;">
                                         <!-- Is there a better way? -->
-                                        <% friendship_record = Friendship.between_users user, current_user %>
+                                        <% friendship_record = Friendship.between_users(user, current_user).limit(1).first %>
                                         <%= link_to user_friendship_path(@user, :id => friendship_record.id),
                                             id: "delete_friend_#{user.name}",
                                             title: "remove #{user.name}",

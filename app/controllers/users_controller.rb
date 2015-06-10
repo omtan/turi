@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     @current_user_request = current_user.requests.where(receiver_id: @user.id).first
     @user_request = @user.requests.where(receiver_id: current_user.id).first
 
-    @friendship = Friendship.between_users @user, current_user
+    @friendship = Friendship.between_users(@user, current_user).limit(1).first
   end
 
   def edit

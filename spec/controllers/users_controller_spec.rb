@@ -34,6 +34,16 @@ RSpec.describe UsersController, type: :controller do
       expect(flash[:alert]).to have_content(I18n.t('user_id_not_found'))
     end
 
+    it " assigns only one friendship for the current user and the passed user" do
+      friend_one = FactoryGirl.create(:user)
+      friend_two = FactoryGirl.create(:user)
+      friendship_one = FactoryGirl.create(:friendship, user: user, friend: friend_one)
+      friendship_two = FactoryGirl.create(:friendship, user: user, friend: friend_two)
+      get :show, id: friend_one.id
+      expect(assigns(:friendship)).to eql(friendship_one)
+      expect(assigns(:friendship)).not_to eql(friendship_two)
+    end
+
   end
 
   describe "GET #edit" do
